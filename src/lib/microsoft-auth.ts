@@ -24,10 +24,31 @@ function isJwtExpired(token: string): boolean {
   }
 }
 
+const DISCOVERY_METHODS = new Set([
+  'initialize',
+  'notifications/initialized',
+  'tools/list',
+  'prompts/list',
+  'resources/list',
+  'ping',
+]);
+
+function isDiscoveryRequest(req: Request): boolean {
+  if (req.method !== 'POST' || !req.body) return false;
+  const body = req.body;
+  if (Array.isArray(body)) {
+    return body.every((item) => DISCOVERY_METHODS.has(item?.method));
+  }
+  return DISCOVERY_METHODS.has(body?.method);
+}
+
 /**
  * Microsoft Bearer Token Auth Middleware validates that the request has a valid Microsoft access token.
  * Returns HTTP 401 + WWW-Authenticate on missing or expired tokens so spec-compliant MCP clients
  * refresh via the /token endpoint. Opaque tokens fall through and are validated by Graph.
+ *
+ * Discovery requests (initialize, tools/list, etc.) are allowed without a token so that MCP
+ * gateways can register available tools before any user has authenticated.
  */
 export const microsoftBearerTokenAuthMiddleware = (
   req: Request & { microsoftAuth?: { accessToken: string } },
@@ -37,6 +58,10 @@ export const microsoftBearerTokenAuthMiddleware = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (isDiscoveryRequest(req)) {
+      next();
+      return;
+    }
     res
       .status(401)
       .set(
