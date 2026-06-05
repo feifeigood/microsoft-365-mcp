@@ -146,6 +146,10 @@ export const TOOL_CATEGORIES: Record<string, ToolCategory> = {
       'create-outlook-contact',
       'update-outlook-contact',
       'delete-outlook-contact',
+      'get-contact-folders',
+      'list-contact-folder-child-folders',
+      'list-child-folder-contacts',
+      'list-contacts-delta',
     ],
   },
   onedrive: {
@@ -154,6 +158,7 @@ export const TOOL_CATEGORIES: Record<string, ToolCategory> = {
     description: 'OneDrive app: file and folder operations',
     tools: [
       'list-drives',
+      'get-drive',
       'get-drive-root-item',
       'get-drive-delta',
       'list-folder-files',
@@ -194,7 +199,9 @@ export const TOOL_CATEGORIES: Record<string, ToolCategory> = {
       'unpin-chat-message',
       // Teams & channels
       'list-joined-teams',
+      'list-all-teams',
       'get-team',
+      'get-primary-channel',
       'list-team-channels',
       'get-team-channel',
       'create-team-channel',

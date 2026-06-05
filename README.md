@@ -459,13 +459,13 @@ exactly the intended tools with no cross-app leakage (e.g. `mail` would otherwis
 `shared-mailbox-*` and `mailbox-settings`).
 
 ```bash
-# Outlook = mail + calendar + contacts (65 tools)
+# Outlook = mail + calendar + contacts (69 tools)
 npx @softeria/ms-365-mcp-server --preset outlook
 
-# OneDrive = file/folder operations (16 tools)
+# OneDrive = file/folder operations (17 tools)
 npx @softeria/ms-365-mcp-server --preset onedrive
 
-# Teams = chats + channels + online meetings (47 tools, requires --org-mode + work account)
+# Teams = chats + channels + online meetings (49 tools, requires --org-mode + work account)
 npx @softeria/ms-365-mcp-server --preset teams --org-mode
 ```
 

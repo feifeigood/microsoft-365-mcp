@@ -433,10 +433,11 @@
     "scopes": ["Files.Read"]
   },
   {
-    "pathPattern": "/drives/{drive-id}/root",
+    "pathPattern": "/drives/{drive-id}",
     "method": "get",
-    "toolName": "get-drive-root-item",
-    "scopes": ["Files.Read"]
+    "toolName": "get-drive",
+    "scopes": ["Files.Read"],
+    "llmTip": "Gets metadata (name, driveType, owner, quota) for a specific drive by id. Use list-drives to find drive-id values. For the signed-in user's default OneDrive you can also use the well-known id from list-drives."
   },
   {
     "pathPattern": "/drives/{drive-id}/items/{driveItem-id}/children",
@@ -922,6 +923,34 @@
     "scopes": ["Contacts.ReadWrite"]
   },
   {
+    "pathPattern": "/me/contactFolders",
+    "method": "get",
+    "toolName": "get-contact-folders",
+    "scopes": ["Contacts.Read"],
+    "llmTip": "Lists the user's contact folders. Use the returned folder id with list-contact-folder-child-folders (nested folders) or list-child-folder-contacts (contacts in that folder). The default 'Contacts' folder is accessed directly via list-outlook-contacts (/me/contacts)."
+  },
+  {
+    "pathPattern": "/me/contactFolders/{contactFolder-id}/childFolders",
+    "method": "get",
+    "toolName": "list-contact-folder-child-folders",
+    "scopes": ["Contacts.Read"],
+    "llmTip": "Lists child folders nested under a contact folder. Get the parent contactFolder-id from get-contact-folders."
+  },
+  {
+    "pathPattern": "/me/contactFolders/{contactFolder-id}/contacts",
+    "method": "get",
+    "toolName": "list-child-folder-contacts",
+    "scopes": ["Contacts.Read"],
+    "llmTip": "Lists contacts inside a specific contact folder. Get the contactFolder-id from get-contact-folders. For the default folder use list-outlook-contacts instead."
+  },
+  {
+    "pathPattern": "/me/contacts/delta()",
+    "method": "get",
+    "toolName": "list-contacts-delta",
+    "scopes": ["Contacts.Read"],
+    "llmTip": "Incremental sync of contacts: returns created/updated/deleted contacts since the last sync. First call returns a full set plus an @odata.deltaLink; persist it and pass its $deltatoken on later calls to fetch only changes."
+  },
+  {
     "pathPattern": "/me",
     "method": "get",
     "toolName": "get-current-user",
@@ -1105,6 +1134,20 @@
     "method": "get",
     "toolName": "get-team",
     "workScopes": ["Team.ReadBasic.All"]
+  },
+  {
+    "pathPattern": "/teams",
+    "method": "get",
+    "toolName": "list-all-teams",
+    "workScopes": ["Team.ReadBasic.All"],
+    "llmTip": "Lists teams across the tenant (not just the ones you joined). Use list-joined-teams for only the signed-in user's teams. Supports $filter/$top; large tenants are paged via @odata.nextLink."
+  },
+  {
+    "pathPattern": "/teams/{team-id}/primaryChannel",
+    "method": "get",
+    "toolName": "get-primary-channel",
+    "workScopes": ["Channel.ReadBasic.All"],
+    "llmTip": "Gets the default 'General' channel of a team without needing its channel id. Use the returned channel id for messaging tools like send-channel-message."
   },
   {
     "pathPattern": "/teams/{team-id}/channels",
