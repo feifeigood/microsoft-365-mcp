@@ -451,6 +451,31 @@ npx @softeria/ms-365-mcp-server --list-presets  # See all available presets
 
 Available presets: `mail`, `calendar`, `files`, `personal`, `work`, `excel`, `contacts`, `tasks`, `onenote`, `search`, `users`, `all`
 
+### App-scoped presets (`outlook`, `onedrive`, `teams`)
+
+For deployments that expose a single Microsoft app, use the app-scoped presets. Unlike the
+regex-based presets above, these are backed by an **explicit tool allow-list**, so they match
+exactly the intended tools with no cross-app leakage (e.g. `mail` would otherwise also match
+`shared-mailbox-*` and `mailbox-settings`).
+
+```bash
+# Outlook = mail + calendar + contacts (65 tools)
+npx @softeria/ms-365-mcp-server --preset outlook
+
+# OneDrive = file/folder operations (16 tools)
+npx @softeria/ms-365-mcp-server --preset onedrive
+
+# Teams = chats + channels + online meetings (47 tools, requires --org-mode + work account)
+npx @softeria/ms-365-mcp-server --preset teams --org-mode
+```
+
+When running behind a host that injects env vars (e.g. one server instance per app), the same
+scoping works via `ENABLED_TOOLS` with an anchored regex, which is equivalent to `--preset outlook`:
+
+```bash
+ENABLED_TOOLS='^(list-mail-messages|...|delete-outlook-contact)$' npx @softeria/ms-365-mcp-server
+```
+
 ## Dynamic Tool Discovery
 
 Instead of loading all 90+ tools upfront, use dynamic discovery so the LLM finds and loads tools only when it needs them:
