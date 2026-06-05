@@ -1,5 +1,5 @@
 {
-  "name": "@feifeigood/microsoft-365-mcp",
+  "name": "@feifeigood91/microsoft-365-mcp",
   "version": "0.1.0",
   "description": " A Model Context Protocol (MCP) server for interacting with Microsoft 365 and Office services through the Graph API",
   "type": "module",
